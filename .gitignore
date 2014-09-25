@@ -1,0 +1,11 @@
+*.so
+*.d
+*.dat
+
+raw
+rootfiles
+jobfiles
+logfiles
+
+hallbfield.map
+rms.png

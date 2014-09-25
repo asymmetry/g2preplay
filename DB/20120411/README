@@ -1,0 +1,5 @@
+db_L.vdc.dat.0 matrix from 3/14 optics
+db_L.vdc.dat.1 2.254GeV, longitudinal, 400016, without correction
+db_L.vdc.dat.2 2.254GeV, longitudinal, 400016, with correction
+db_L.vdc.dat.3 1.706GeV, transverse, 400016, without correction
+db_L.vdc.dat.4 1.706GeV, transverse, 400016, with correction

@@ -1,0 +1,35 @@
+######################### LEFT SCINTILLATOR PLANE 2 ############################
+Number of Left Scintillator 2 paddles ------------------------------------------
+      16
+Crate,Slot,1st,Last chans,Beg S2 chan - need equal # entries for ADC and TDC	
+       5      18      48      54       1      1881   - ADCs pads 1-7 (right)
+       5      20      47      47       8      1881   - ADCs pads 8-8 (right)
+       5      18      56      63       9      1881   - ADCs pads 9-16 (right)
+       5      18      16      31      17      1881   - ADCs pads 1-16 (left)
+       5      16      16      31       1      1877   - TDCs pads 1-16 (right)
+       5      16      64      79      17      1877   - TDCs pads 1-16 (left)
+      -1       0       0       0       0
+X,Y,Z coords (in cm) of S2 front plane in spectrom cs --------------------------
+   -0.11     0.0  3.1415                             - Meters
+Half of X, half of Y, full Z sizes of S2 ---------------------------------------
+   1.118     0.216     0.05                          - Meters
+Rotation angle of the S2 plane -------------------------------------------------
+     0.0                                             - Degrees
+TDC time offsets of S2 TDC channels --------------------------------------------
+     15.00 16.13 13.55 16.45 20.97 13.98 15.12 8.96 12.99 12.50 12.04 9.69 13.09 11.18 8.20 7.97 - Left Paddles
+    -12.61 -11.75 -8.84 -10.00 -5.45 -8.52 -11.63 -12.93 -12.99 -15.49 -16.18 -20.97 -17.16 -19.30 -19.22 -22.35 - Right Paddles
+Pedestal values of S2 ADC channels ---------------------------------------------
+    349 313 262 262 435 486 415 476 279 265 288 241 431 441 384 484    -Left Paddles
+    360 318 304 332 378 440 444 399 365 302 335 284 485 434 470 418    -Right Paddles
+Amplitude transformation coefficients of S2 ADC channels -----------------------
+  1.00   1.01   0.97   0.97   0.96   0.96   0.97   0.97 
+  0.97   0.97   0.96   0.97   0.98   0.97   0.97   0.97 
+  0.99   0.98   0.98   0.99   0.99   0.98   0.97   0.92 
+  0.98   0.98   0.97   0.98   0.97   0.98   0.94   0.98 
+TDC setting in sec/channel -----------------------------------------------------
+  0.50e-9
+Speed of light in the scintillator ---------------------------------------------
+     1.34281e+08
+Attenuation length in inverse meters (carried over) ----------------------------
+  0.7
+################################################################################

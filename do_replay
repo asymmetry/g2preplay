@@ -1,0 +1,281 @@
+#!/bin/bash
+
+########################################################################
+# G2P Replay Script
+# Author: Chao Gu
+########################################################################
+
+########################################################################
+# envs
+########################################################################
+# NOTICE: everything need to be modified is here !!!
+
+# database path
+G2P_DIR=/w/halla-sfs62/g2p
+DB_DIR=${G2P_DIR}/chao/replay/DB
+
+# raw data path
+REPLAY_RAW_PATH=/cache/mss/halla/g2p/raw
+
+# output dir path
+REPLAY_OUT_PATH=/volatile/halla/g2p/chao/rootfiles
+
+# settings
+REPLAY_USE_EPICSINFO=1
+REPLAY_USE_SCALER=1
+REPLAY_USE_HELICITY=1
+REPLAY_USE_BEAM=1
+REPLAY_USE_OPTICS=1
+########################################################################
+
+########################################################################
+# paths
+########################################################################
+# epics path
+EPICS_PATH=${G2P_DIR}/centos62/decode
+
+# beam info path
+BEAM_PATH=${G2P_DIR}/centos62/g2ppylib
+BEAM_PKL_PATH=/volatile/halla/g2p/pkls/bpmdatas
+
+# heliciy path
+HEL_PATH=${G2P_DIR}/centos62/helicity
+
+# optics path
+OPTICS_PATH=${G2P_DIR}/chao/g2prec
+########################################################################
+
+########################################################################
+# main
+########################################################################
+# source /w/halla-sfs62/g2p/env.sh
+# assume the env.sh file has already been sourced
+
+# some help function
+function echo_usage() {
+  echo -e "usage: do_replay [-e|--event=EVENT_AMOUNT] [-f|--farm] [-h|--help]"
+  echo -e "                 [-l|--list=RUN_LIST] RUN_NUMBERS"
+  echo -e "See 'do_replay --help' for more information. "
+}
+
+function echo_help() {
+  echo -e "usage: do_replay [options] RUN_NUMBERS"
+  echo -e "  -e, --event=EVENT_AMOUNT   Set event limit" 
+  echo -e "  -f, --farm                 Use batch farm to replay"
+  echo -e "  -h, --help                 This small usage guide"
+  echo -e "  -l, --list=RUN_LIST        Set run number list to replay"
+}
+
+# analysis the command line parameters and save them
+ARGS=$(getopt -o e:fhl: -l help,event:,farm,list: \
+              -n "do_replay" -- "$@")
+ORI_ARGS="$@"
+eval set -- "$ARGS"
+
+# program defaults
+EVENT_AMOUNT=-1
+USE_FARM=0
+RUN_LIST=""
+
+# read command line parameters
+while true; do
+  case "$1" in       
+    -e|--evt)         EVENT_AMOUNT="$2"; shift 2;;
+    -f|--farm)        USE_FARM=1; shift;;
+    -h|--help)        echo_help; exit 0;;
+    -l|--list)        RUN_LIST="$2"; shift 2;;
+    --)               shift; break;;
+    *)                echo_usage; exit 11;;
+  esac
+done
+
+# defaults settings
+#if [[ $REPLAY_USE_OPTICS -eq 1 ]]; then
+#  REPLAY_USE_BEAM=1
+#fi
+
+if [[ $REPLAY_USE_BEAM -eq 1 ]]; then
+  REPLAY_USE_EPICSINFO=1
+  REPLAY_USE_SCALER=1
+fi
+
+if [[ $REPLAY_USE_HELICITY -eq 1 ]]; then
+  REPLAY_USE_EPICSINFO=1
+fi
+
+if [[ $REPLAY_USE_SCALER -eq 1 ]]; then
+  REPLAY_USE_EPICSINFO=1
+fi
+
+# export settings
+export DB_DIR
+export REPLAY_RAW_PATH
+export REPLAY_OUT_PATH
+export REPLAY_USE_EPICSINFO
+export REPLAY_USE_SCALER
+export REPALY_USE_HELICITY
+export REPLAY_USE_BEAM
+export REPLAY_USE_OPTICS
+export BEAMPACPATH=${BEAM_PATH}
+export BEAMPKLBAK=${BEAM_PKL_PATH}
+export PYTHONPATH=${BEAMPACPATH}:${PYTHONPATH}
+export BEAMDBPATH=${BEAM_PATH}
+export BEAMDEBUG=0
+export BEAMUPDATE=0
+export BEAMUPDATECHECK=0
+export G2P=${G2P_DIR}
+ 
+# normal replay, $1 is run number
+function replay_normal() {
+  # left/right selection
+  if [[ "$1" -ge 20000 ]]; then
+    ARM="R"
+    HEL_CFGFILE="RHRS.cfg"
+  else
+    ARM="L"
+    HEL_CFGFILE="LHRS.cfg"
+  fi
+
+  # clean work directory
+  if [[ -e $REPLAY_OUT_PATH/g2p_$1.root ]];then
+    rm -rf $REPLAY_OUT_PATH/g2p_$1*.root
+    rm -rf $REPLAY_OUT_PATH/g2p_$1*.root_bak
+    rm -rf $REPLAY_OUT_PATH/pkl
+  fi
+
+  # replay with analyzer
+  analyzer -b -q "replay_$ARM.C($1,0,$EVENT_AMOUNT,0,1)"
+
+  # add epics info
+  if [[ "$REPLAY_USE_EPICSINFO" -eq 1 ]]; then
+    analyzer -b -q "Purge.C($1)"
+    $EPICS_PATH/gen_epics $1 -r $REPLAY_OUT_PATH -e $EPICS_PATH/result -c $EPICS_PATH/list.cfg
+  fi
+
+  # add helicity info
+  if [[ "$REPLAY_USE_HELICITY" -eq 1 ]]; then
+    mkdir tmp
+    $HEL_PATH/decode -e $EVENT_AMOUNT -c $HEL_PATH/$HEL_CFGFILE -r $REPLAY_RAW_PATH -o tmp $1 
+    $HEL_PATH/ring -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/tir -r -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/align -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/gen_hel -c $HEL_PATH/$HEL_CFGFILE -i tmp -r $REPLAY_OUT_PATH $1
+    rm -rf tmp
+  fi
+
+  # add bpm info
+  if [[ "$REPLAY_USE_BEAM" -eq 1 ]]; then
+    python $BEAM_PATH/bpm.py $1
+  fi
+
+  # add optics info
+  if [[ "$REPLAY_USE_OPTICS" -eq 1 ]]; then
+    $OPTICS_PATH/g2prec -d $DB_DIR/recdb -r $REPLAY_OUT_PATH $1
+  fi
+
+  # clean work directory
+  if [[ -e $REPLAY_OUT_PATH/g2p_$1.root_bak ]];then
+    rm -rf $REPLAY_OUT_PATH/g2p_$1*.root_bak
+    rm -rf $REPLAY_OUT_PATH/pkl
+  fi
+}
+
+# generate a farm replay script
+function replay_farm() {
+  : > replay.$1
+  chmod +x replay.$1
+  : > job.$1
+
+  if [[ "$1" -ge 20000 ]]; then
+    ARM="R"
+  else
+    ARM="L"
+  fi
+
+  echo -e '#!/bin/bash' >> replay.$1
+  echo -e "source /w/halla-sfs62/g2p/centos62/env.sh" >> replay.$1
+  echo -e ": > $1.log" >> replay.$1
+  echo -e "exec 6>&1 7>&2 &>$1.log" >> replay.$1
+
+  echo -e "export DB_DIR=$DB_DIR" >> replay.$1
+  echo -e "export REPLAY_OUT_PATH=." >> replay.$1
+  echo -e "export REPLAY_USE_EPICSINFO=$REPLAY_USE_EPICSINFO" >> replay.$1
+  echo -e "export REPLAY_USE_SCALER=$REPLAY_USE_SCALER" >> replay.$1
+  echo -e "export REPLAY_USE_HELICITY=$REPLAY_USE_HELICITY" >> replay.$1
+  echo -e "export REPLAY_USE_BEAM=$REPLAY_USE_BEAM" >> replay.$1
+  echo -e "export REPLAY_USE_OPTICS=$REPLAY_USE_OPTICS" >> replay.$1
+
+  echo -e "ARM=$ARM" >> replay.$1
+  echo -e "RUN=$1" >> replay.$1
+  echo -e "EVENT_AMOUNT=$EVENT_AMOUNT" >> replay.$1
+  echo -e "EPICS_PATH=$EPICS_PATH" >> replay.$1
+  echo -e "HEL_PATH=$HEL_PATH" >> replay.$1
+  echo -e "BEAM_PATH=$BEAM_PATH" >> replay.$1
+  echo -e "OPTICS_PATH=$OPTICS_PATH" >> replay.$1
+  echo -e "REPLAY_PATH=$PWD" >> replay.$1
+  cat farm_template >> replay.$1
+
+  echo -e 'exec 1>&6 2>&7 6>&- 7>&-' >> replay.$1
+  echo -e "sed '/Did not init slot/'d $1.log > temp1.dat" >> replay.$1
+  echo -e "sed '/crateslot loadData for slot/'d temp1.dat > temp2.dat" >> replay.$1
+  echo -e "sed '/Fix your cratemap/'d temp2.dat > temp3.dat" >> replay.$1
+  echo -e "sed '/hits on TDC channel/'d temp3.dat > temp4.dat" >> replay.$1
+  echo -e "mv temp4.dat $1.log" >> replay.$1
+  echo -e "cp $1.log $PWD/logfiles" >> replay.$1
+  echo -e "cp *.root $REPLAY_OUT_PATH" >> replay.$1
+  echo -e 'exit 0' >> replay.$1
+
+  echo -e "PROJECT: g2p" >> job.$1
+  echo -e "JOBNAME: replay.$1" >> job.$1
+  echo -e "TRACK: analysis" >> job.$1
+  echo -e "DISK_SPACE:  32 GB" >> job.$1
+  echo -e "MEMORY: 2000 MB" >> job.$1
+  echo -e "OS: centos62" >> job.$1
+  echo -e "COMMAND: replay.$1" >> job.$1
+  echo -e "OTHER_FILES: " >> job.$1
+  echo -e "$PWD/jobfiles/replay.$1" >> job.$1
+  echo -e "SINGLE_JOB: true" >> job.$1
+  echo -e "INPUT_FILES: " >> job.$1
+  for file in $(ls -1 /mss/halla/g2p/raw/g2p_$1.dat.?)
+  do
+    echo "$file" >> job.$1
+  done
+
+  jsub job.$1
+  mv replay.$1 job.$1 jobfiles 
+}
+
+# 
+if [[ "$USE_FARM" -eq 0 ]]; then
+  if [[ -n "$RUN_LIST" ]]; then
+    exec 6<&0 7<$RUN_LIST 0<&7 # need to use some trick here
+    while read i; do
+      exec 0<&6
+      replay_normal $i
+      exec 0<&7
+    done
+    exec 0<&6 6<&- 7<&-
+  elif [[ -n "$@" ]]; then
+    for i in "$@"; do
+      replay_normal $i
+    done
+  else
+    echo_usage
+    exit 13
+  fi
+else
+  if [[ -n "$RUN_LIST" ]]; then
+    while read i; do
+      replay_farm $i
+    done < $RUN_LIST
+  elif [[ -n "$@" ]]; then
+    for i in "$@"; do
+      replay_farm $i
+    done
+  else
+    echo_usage
+    exit 13
+  fi
+fi
+
+exit 0

@@ -1,0 +1,27 @@
+#-----------------------------------------------------------
+#  Database for Hall A g2p happex DAQ
+#
+
+#build independent happex tree or not
+happex.buildtree=0
+
+#happex daq roc
+happex.L.happexroc = 25
+happex.R.happexroc = 26
+happex.TA.happexroc = 0
+
+#maximum ringbuffer size
+happex.happexdepth = 50
+
+#channel
+happex.L.happex_bpmchan = 0 1 2 3 8 9 10 11
+happex.L.happex_bcmchan = 4 5 6
+happex.L.happex_rasterchan = 12 13 14 15
+
+happex.R.happex_bpmchan = 0 1 2 3 8 9 10 11
+happex.R.happex_bcmchan = 4 5 6
+happex.R.happex_rasterchan = 12 13 14 15
+
+happex.TA.happex_bpmchan = 0 0 0 0 0 0 0 0
+happex.TA.happex_bcmchan = 0 0 0
+happex.TA.happex_rasterchan = 0 0 0 0

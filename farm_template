@@ -1,0 +1,49 @@
+export BEAMPACPATH="."
+export PYTHONPATH=${BEAMPACPATH}:${PYTHONPATH}
+export BEAMDBPATH="."
+export BEAMUPDATE=0
+export BEAMUPDATECHECK=0
+export G2P=${G2P_DIR}
+
+cp -pr $EPICS_PATH/gen_epics .
+cp -pr $EPICS_PATH/result/s_$RUN.dat .
+cp -pr $EPICS_PATH/list.cfg .
+
+cp -pr $HEL_PATH/decode .
+cp -pr $HEL_PATH/ring .
+cp -pr $HEL_PATH/tir .
+cp -pr $HEL_PATH/align .
+cp -pr $HEL_PATH/gen_hel .
+cp -pr $HEL_PATH/*.cfg .
+cp -pr $HEL_PATH/helicity.sh .
+
+cp -pr $BEAM_PATH/beampackage .
+cp -pr $BEAM_PATH/bpm.py .
+cp -pr $BEAM_PATH/pyDB .
+
+cp -pr $OPTICS_PATH/g2prec .
+cp -pr $OPTICS_PATH/hallbfield.map .
+
+cp -pr $REPLAY_PATH/*.C .
+cp -pr $REPLAY_PATH/*.so .
+cp -pr $REPLAY_PATH/*.cuts .
+cp -pr $REPLAY_PATH/*.odef .
+
+analyzer -b -q "replay_$ARM.C($RUN,0,$EVENT_AMOUNT,0,1)"
+
+if [[ "REPLAY_USE_EPICSINFO" -eq 1 ]]; then
+  analyzer -b -q "Purge.C($RUN)"
+  ./gen_epics $RUN
+fi
+
+if [[ "$REPLAY_USE_HELICITY" -eq 1 ]]; then
+  ./helicity.sh -r -e $EVENT_AMOUNT $RUN
+fi
+
+if [[ "$REPLAY_USE_BEAM" -eq 1 ]]; then
+  python bpm.py $RUN
+fi
+
+if [[ "$REPLAY_USE_OPTICS" -eq 1 ]]; then
+  ./g2prec -d $DB_DIR/recdb $RUN
+fi

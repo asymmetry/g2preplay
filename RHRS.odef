@@ -1,0 +1,127 @@
+# Analyzer output definition file used by THaOutput class.
+# See  http://hallaweb.jlab.org/root/THaOutput.html
+#
+# Edited by Chao Gu, 08/08/2012
+
+#----------------------------------------------------
+# Blocks
+#----------------------------------------------------
+
+# Right HRS
+variable R.vdc.u1.nclust
+variable R.vdc.u2.nclust
+variable R.vdc.v1.nclust
+variable R.vdc.v2.nclust
+variable R.vdc.u1.rawtime
+variable R.vdc.u2.rawtime
+variable R.vdc.v1.rawtime
+variable R.vdc.v2.rawtime
+variable R.vdc.u1.time
+variable R.vdc.u2.time
+variable R.vdc.v1.time
+variable R.vdc.v2.time
+
+variable R.cer.a_c
+variable R.cer.t
+variable R.cer.trx
+variable R.cer.try
+variable R.cer.asum_c
+variable R.cer.asum_p
+
+variable R.ps.a_c
+variable R.sh.a_c
+variable R.ps.e
+variable R.sh.e
+variable R.ps.x
+variable R.sh.x
+variable R.ps.y
+variable R.sh.y
+variable R.ps.trx
+variable R.sh.trx
+variable R.ps.try
+variable R.sh.try
+variable R.ps.nblk
+variable R.sh.nblk
+variable R.ps.mult
+variable R.sh.mult
+
+variable R.tr.n
+variable R.tr.x
+variable R.tr.th
+variable R.tr.y
+variable R.tr.ph
+variable R.tr.r_x
+variable R.tr.r_th
+variable R.tr.r_y
+variable R.tr.r_ph
+variable R.tr.d_x
+variable R.tr.d_th
+variable R.tr.d_y
+variable R.tr.d_ph
+variable R.tr.tg_th
+variable R.tr.tg_y
+variable R.tr.tg_ph
+variable R.tr.tg_dp
+variable R.tr.p
+
+variable R.gold.x
+variable R.gold.th
+variable R.gold.y
+variable R.gold.ph
+variable R.gold.dp
+variable R.gold.p
+
+# Physics variables
+#block rpr.*
+#block exR.*
+#block exRc.*
+#block EKR.*
+#block PKR.*
+
+# Beam variables
+#block Rurb.BPMA.*
+#block Rurb.BPMB.*
+#block Rrb.Raster.*
+#block happex.R.*
+#block Rclk.*
+
+#----------------------------------------------------
+# Extra variables
+#----------------------------------------------------
+
+# Right HRS Cherenkov
+#variable R.cer.asum_c
+
+# Optics stuff by Jin Huang
+#formula    R_sv_x  exR.x+exR.th*1.16539
+#formula    R_sv_y  exR.y+exR.ph*1.16539
+#TH2F Rsieve 'R-HRS Sieve Slit' R_sv_x R_sv_y  200 -0.1 0.1 200 -0.1 0.1
+
+#----------------------------------------------------
+# Cuts
+#----------------------------------------------------
+
+#CUT rightArm (DBB.evtypebits&(1<<1))!=0
+#CUT ElectronRightArm 1
+#CUT rightOnly 1
+
+#----------------------------------------------------
+# Scaler & Epics
+#----------------------------------------------------
+begin epics
+  IPM1H05A.XPOS
+  IPM1H05A.YPOS
+  IPM1H05B.XPOS
+  IPM1H05B.YPOS
+end epics
+
+begin scalers evright
+  clkcount 2 7 counts
+  t7c 2 6 counts
+  bcm_upr 2 16
+  bcm_downr 2 17
+  t1c 2 0 counts
+  t1r 2 0
+  t2c 2 1 counts
+  t2r 2 1
+end scalers

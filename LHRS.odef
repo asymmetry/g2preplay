@@ -1,0 +1,131 @@
+# Analyzer output definition file used by THaOutput class.
+# See  http://hallaweb.jlab.org/root/THaOutput.html
+#
+# Edited by Chao Gu, 08/08/2012
+
+#----------------------------------------------------
+# Blocks
+#----------------------------------------------------
+
+# Left HRS
+variable L.vdc.u1.nclust
+variable L.vdc.u2.nclust
+variable L.vdc.v1.nclust
+variable L.vdc.v2.nclust
+variable L.vdc.u1.rawtime
+variable L.vdc.u2.rawtime
+variable L.vdc.v1.rawtime
+variable L.vdc.v2.rawtime
+variable L.vdc.u1.time
+variable L.vdc.u2.time
+variable L.vdc.v1.time
+variable L.vdc.v2.time
+
+variable L.cer.a_c
+variable L.cer.t
+variable L.cer.trx
+variable L.cer.try
+variable L.cer.asum_c
+variable L.cer.asum_p
+
+variable L.prl1.a_c
+variable L.prl2.a_c
+variable L.prl1.e
+variable L.prl2.e
+variable L.prl1.x
+variable L.prl2.x
+variable L.prl1.y
+variable L.prl2.y
+variable L.prl1.trx
+variable L.prl2.trx
+variable L.prl1.try
+variable L.prl2.try
+variable L.prl1.nblk
+variable L.prl2.nblk
+variable L.prl1.mult
+variable L.prl2.mult
+
+variable L.tr.n
+variable L.tr.x
+variable L.tr.th
+variable L.tr.y
+variable L.tr.ph
+variable L.tr.r_x
+variable L.tr.r_th
+variable L.tr.r_y
+variable L.tr.r_ph
+variable L.tr.d_x
+variable L.tr.d_th
+variable L.tr.d_y
+variable L.tr.d_ph
+variable L.tr.tg_th
+variable L.tr.tg_y
+variable L.tr.tg_ph
+variable L.tr.tg_dp
+variable L.tr.p
+
+variable L.gold.x
+variable L.gold.th
+variable L.gold.y
+variable L.gold.ph
+variable L.gold.dp
+variable L.gold.p
+
+# Decoder data
+variable DL.edtpr
+variable DL.evtypebits
+
+# Physics variables
+#block rpl.*
+#block exL.*
+#block exLc.*
+#block EKL.*
+#block PKL.*
+
+# Beam variables
+block Lurb.BPMA.*
+block Lurb.BPMB.*
+block Lrb.Raster.*
+block happex.L.*
+block Lclk.*
+
+#----------------------------------------------------
+# Extra variables
+#----------------------------------------------------
+
+# Left HRS Cherenkov
+#variable L.cer.asum_c
+
+# Optics stuff by Jin Huang
+#formula    L_sv_x  exL.x+exL.th*1.16539
+#formula    L_sv_y  exL.y+exL.ph*1.16539
+#TH2F Lsieve 'L-HRS Sieve Slit' L_sv_x L_sv_y  200 -0.1 0.1 200 -0.1 0.1
+
+#----------------------------------------------------
+# Cuts
+#----------------------------------------------------
+
+#CUT leftArm (DBB.evtypebits&0x58)!=0
+#CUT ElectronLeftArm 1
+#CUT leftOnly 1
+
+#----------------------------------------------------
+# Scaler & Epics
+#----------------------------------------------------
+begin epics
+  IPM1H05A.XPOS
+  IPM1H05A.YPOS
+  IPM1H05B.XPOS
+  IPM1H05B.YPOS
+end epics
+
+begin scalers evleft
+  clkcount 3 7 counts
+  t7c 3 6 counts
+  bcm_upr 3 16
+  bcm_downr 3 17
+  t3c 3 2 counts
+  t3r 3 2
+  t4c 3 3 counts
+  t4r 3 3
+end scalers
