@@ -32,10 +32,10 @@ REPLAY_USE_OPTICS=1
 # paths
 ########################################################################
 # epics path
-EPICS_PATH=${G2P_DIR}/centos62/decode
+EPICS_PATH=${G2P_DIR}/centos62/epics
 
 # beam info path
-BEAM_PATH=${G2P_DIR}/centos62/g2ppylib
+BEAM_PATH=${G2P_DIR}/centos62/bpm
 BEAM_PKL_PATH=/volatile/halla/g2p/pkls/bpmdatas
 
 # heliciy path
