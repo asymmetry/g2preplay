@@ -3,6 +3,7 @@ const char** PATHS;
 const char* RAW_DATA_FORMAT;
 const char* STD_REPLAY_OUTPUT_DIR;
 const char* CUSTOM_REPLAY_OUTPUT_DIR;
+const char* SUMMARY_PHYSICS_PATH;
 const char* SUMMARY_PHYSICS_FORMAT;
 
 using namespace std;
@@ -82,6 +83,14 @@ void replay_R(Int_t runnumber=0,Int_t defAll=0,Int_t defEvt=-1,Int_t fstEvt=0,Bo
   if(bBeam){
     THaIdealBeam *ib = new THaIdealBeam("ib", "Ideal beam");
     gHaApps->Add(ib);
+    THaG2PUnRasteredBeam *Rurb = new THaG2PUnRasteredBeam("Rurb","Unrastered beam from R-HRS");
+    gHaApps->Add(Rurb);
+    THaG2PRasteredBeam *Rrb = new THaG2PRasteredBeam("Rrb","Unrastered beam from R-HRS");
+    gHaApps->Add(Rrb);
+    THaG2PHappex *happex=new THaG2PHappex("happex.R","happex");
+    Rurb->AddDetector(happex);
+    THaG2PClockDecode *clock=new THaG2PClockDecode("Rclk","clock info");
+    Rurb->AddDetector(clock);
   }
   TString beamchoice = "ib";
     

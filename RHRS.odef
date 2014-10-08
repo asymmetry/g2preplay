@@ -71,6 +71,10 @@ variable R.gold.ph
 variable R.gold.dp
 variable R.gold.p
 
+# Decoder data
+variable DR.edtpr
+variable DR.evtypebits
+
 # Physics variables
 #block rpr.*
 #block exR.*
@@ -79,11 +83,11 @@ variable R.gold.p
 #block PKR.*
 
 # Beam variables
-#block Rurb.BPMA.*
-#block Rurb.BPMB.*
-#block Rrb.Raster.*
-#block happex.R.*
-#block Rclk.*
+block Rurb.BPMA.*
+block Rurb.BPMB.*
+block Rrb.Raster.*
+block happex.R.*
+block Rclk.*
 
 #----------------------------------------------------
 # Extra variables
