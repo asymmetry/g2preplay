@@ -1,5 +1,7 @@
 db_L.vdc.dat.0 original matrix
-db_L.vdc.dat.1 2.254GeV, no field, 484816, without correction, no y
+db_L.vdc.dat.1 2.254GeV, no field, 484816, no correction, no y
+db_L.vdc.dat.2 2.254GeV, no field, 484816, no correction, with y
 
 db_R.vdc.dat.0 original matrix
-db_R.vdc.dat.1 2.254GeV, no field, 484816, without correction, no y
+db_R.vdc.dat.1 2.254GeV, no field, 484816, no correction, no y
+db_R.vdc.dat.2 2.254GeV, no field, 484816, no correction, with y
