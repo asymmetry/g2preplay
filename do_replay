@@ -42,7 +42,7 @@ BEAM_PKL_PATH=/volatile/halla/g2p/pkls/bpmdatas
 HEL_PATH=${G2P_DIR}/centos62/helicity
 
 # optics path
-OPTICS_PATH=${G2P_DIR}/chao/g2prec
+OPTICS_PATH=${G2P_DIR}/centos62/g2prec
 ########################################################################
 
 ########################################################################
