@@ -1,6 +1,8 @@
 *.so
 *.d
-*.dat
+left.*.dat
+right*.dat
+list.dat
 
 raw
 rootfiles
