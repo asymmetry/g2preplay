@@ -1,6 +1,7 @@
 db_L.vdc.dat.0 matrix from 3/14 optics
-db_L.vdc.dat.1 2.254GeV, transverse, 403216, no correction
-db_L.vdc.dat.2 2.254GeV, transverse, 403216, with correction
+db_L.vdc.dat.1 2.254GeV, transverse, 403216, 1st iteration
+db_L.vdc.dat.2 2.254GeV, transverse, 403216, 2nd iteration
 
 db_R.vdc.dat.0 matrix from 3/14 optics
-db_R.vdc.dat.1 2.254GeV, transverse, 403216, no correction
+db_R.vdc.dat.1 2.254GeV, transverse, 403216, 1st iteration
+db_R.vdc.dat.2 2.254GeV, transverse, 403216, 2nd iteration

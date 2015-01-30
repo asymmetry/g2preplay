@@ -1,11 +1,13 @@
 db_L.vdc.dat.0 matrix from 3/14 optics
-db_L.vdc.dat.1 2.254GeV, longitudinal, 400016, no correction
-db_L.vdc.dat.2 2.254GeV, longitudinal, 400016, with correction
-db_L.vdc.dat.3 1.706GeV, transverse, 400016, no correction
-db_L.vdc.dat.4 1.706GeV, transverse, 400016, with correction
-db_L.vdc.dat.5 1.158GeV, transverse, 400016, no correction
-db_L.vdc.dat.6 1.158GeV, transverse, 400016, with correction
+db_L.vdc.dat.1 2.254GeV, longitudinal, 400016, 1st iteration
+db_L.vdc.dat.2 2.254GeV, longitudinal, 400016, 2nd iteration
+db_L.vdc.dat.3 1.706GeV, transverse, 400016, 1st iteration
+db_L.vdc.dat.4 1.706GeV, transverse, 400016, 2nd iteration
+db_L.vdc.dat.5 1.158GeV, transverse, 400016, 1st iteration
+db_L.vdc.dat.6 1.158GeV, transverse, 400016, 2nd iteration
 
 db_R.vdc.dat.0 matrix from 3/14 optics
-db_R.vdc.dat.3 1.706GeV, transverse, 400016, no correction
-db_R.vdc.dat.5 1.158GeV, transverse, 400016, no correction
+db_R.vdc.dat.3 1.706GeV, transverse, 400016, 1st iteration
+db_R.vdc.dat.4 1.706GeV, transverse, 400016, 2nd iteration
+db_R.vdc.dat.5 1.158GeV, transverse, 400016, 1st iteration
+db_R.vdc.dat.6 1.158GeV, transverse, 400016, 2nd iteration
