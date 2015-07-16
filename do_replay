@@ -11,8 +11,8 @@
 # NOTICE: everything need to be modified is here !!!
 
 # database path
-G2P_DIR=/w/halla-sfs62/g2p
-DB_DIR=${G2P_DIR}/chao/replay/DB
+G2P_DIR=/w/halla-scifs2/g2p
+DB_DIR=${G2P_DIR}/centos62/replay/DB
 
 # raw data path
 REPLAY_RAW_PATH=/cache/mss/halla/g2p/raw
@@ -48,7 +48,7 @@ OPTICS_PATH=${G2P_DIR}/centos62/g2prec
 ########################################################################
 # main
 ########################################################################
-# source /w/halla-sfs62/g2p/env.sh
+# source $G2P_DIR/centos62/env.sh
 # assume the env.sh file has already been sourced
 
 # some help function
@@ -193,7 +193,7 @@ function replay_farm() {
   fi
 
   echo -e '#!/bin/bash' >> replay.$1
-  echo -e "source /w/halla-sfs62/g2p/centos62/env.sh" >> replay.$1
+  echo -e "source /w/halla-scifs2/g2p/centos62/env.sh" >> replay.$1
   echo -e ": > $1.log" >> replay.$1
   echo -e "exec 6>&1 7>&2 &>$1.log" >> replay.$1
 

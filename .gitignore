@@ -2,7 +2,7 @@
 *.d
 left.*.dat
 right*.dat
-list.dat
+list*.dat
 
 raw
 rootfiles
