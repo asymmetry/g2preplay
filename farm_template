@@ -29,6 +29,10 @@ cp -pr $REPLAY_PATH/*.so .
 cp -pr $REPLAY_PATH/*.cuts .
 cp -pr $REPLAY_PATH/*.odef .
 
+echo
+ls -al
+echo
+
 analyzer -b -q "replay_$ARM.C($RUN,0,$EVENT_AMOUNT,0,1)"
 
 if [[ "REPLAY_USE_EPICSINFO" -eq 1 ]]; then

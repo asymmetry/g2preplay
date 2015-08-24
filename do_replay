@@ -193,10 +193,16 @@ function replay_farm() {
   fi
 
   echo -e '#!/bin/bash' >> replay.$1
+  echo >> replay.$1
   echo -e "source /w/halla-scifs2/g2p/centos62/env.sh" >> replay.$1
+  echo >> replay.$1
   echo -e ": > $1.log" >> replay.$1
   echo -e "exec 6>&1 7>&2 &>$1.log" >> replay.$1
-
+  echo >> replay.$1
+  echo -e "RUN=$1" >> replay.$1
+  echo -e "ARM=$ARM" >> replay.$1
+  echo -e "EVENT_AMOUNT=$EVENT_AMOUNT" >> replay.$1
+  echo >> replay.$1
   echo -e "export DB_DIR=$DB_DIR" >> replay.$1
   echo -e "export REPLAY_OUT_PATH=." >> replay.$1
   echo -e "export REPLAY_USE_EPICSINFO=$REPLAY_USE_EPICSINFO" >> replay.$1
@@ -204,18 +210,19 @@ function replay_farm() {
   echo -e "export REPLAY_USE_HELICITY=$REPLAY_USE_HELICITY" >> replay.$1
   echo -e "export REPLAY_USE_BEAM=$REPLAY_USE_BEAM" >> replay.$1
   echo -e "export REPLAY_USE_OPTICS=$REPLAY_USE_OPTICS" >> replay.$1
-
-  echo -e "ARM=$ARM" >> replay.$1
-  echo -e "RUN=$1" >> replay.$1
-  echo -e "EVENT_AMOUNT=$EVENT_AMOUNT" >> replay.$1
+  echo >> replay.$1
   echo -e "EPICS_PATH=$EPICS_PATH" >> replay.$1
   echo -e "HEL_PATH=$HEL_PATH" >> replay.$1
   echo -e "BEAM_PATH=$BEAM_PATH" >> replay.$1
   echo -e "OPTICS_PATH=$OPTICS_PATH" >> replay.$1
   echo -e "REPLAY_PATH=$PWD" >> replay.$1
+  echo >> replay.$1
+  
   cat farm_template >> replay.$1
 
+  echo >> replay.$1
   echo -e 'exec 1>&6 2>&7 6>&- 7>&-' >> replay.$1
+  echo >> replay.$1
   echo -e "sed '/Did not init slot/'d $1.log > temp1.dat" >> replay.$1
   echo -e "sed '/crateslot loadData for slot/'d temp1.dat > temp2.dat" >> replay.$1
   echo -e "sed '/Fix your cratemap/'d temp2.dat > temp3.dat" >> replay.$1
@@ -223,11 +230,14 @@ function replay_farm() {
   echo -e "mv temp4.dat $1.log" >> replay.$1
   echo -e "cp $1.log $PWD/logfiles" >> replay.$1
   echo -e "cp *.root $REPLAY_OUT_PATH" >> replay.$1
+  echo >> replay.$1
   echo -e 'exit 0' >> replay.$1
+
+  mv replay.$1 jobfiles
 
   echo -e "PROJECT: g2p" >> job.$1
   echo -e "JOBNAME: replay.$1" >> job.$1
-  echo -e "TRACK: analysis" >> job.$1
+  echo -e "TRACK: reconstruction" >> job.$1
   echo -e "DISK_SPACE:  32 GB" >> job.$1
   echo -e "MEMORY: 2000 MB" >> job.$1
   echo -e "OS: centos62" >> job.$1
@@ -240,9 +250,6 @@ function replay_farm() {
   do
     echo "$file" >> job.$1
   done
-
-  jsub job.$1
-  mv replay.$1 job.$1 jobfiles 
 }
 
 # 
@@ -265,12 +272,21 @@ if [[ "$USE_FARM" -eq 0 ]]; then
   fi
 else
   if [[ -n "$RUN_LIST" ]]; then
+    rm -rf job.*
     while read i; do
       replay_farm $i
     done < $RUN_LIST
+    for jobfile in $(ls job.*)
+    do
+      jsub $jobfile
+      mv $jobfile jobfiles
+    done
   elif [[ -n "$@" ]]; then
+    rm -rf job.*
     for i in "$@"; do
       replay_farm $i
+      jsub job.$i
+      mv job.$i jobfiles
     done
   else
     echo_usage
