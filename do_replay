@@ -240,7 +240,7 @@ function replay_farm() {
   echo -e "TRACK: reconstruction" >> job.$1
   echo -e "DISK_SPACE:  32 GB" >> job.$1
   echo -e "MEMORY: 2000 MB" >> job.$1
-  echo -e "OS: centos62" >> job.$1
+  echo -e "OS: centos65" >> job.$1
   echo -e "COMMAND: replay.$1" >> job.$1
   echo -e "OTHER_FILES: " >> job.$1
   echo -e "$PWD/jobfiles/replay.$1" >> job.$1
