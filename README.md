@@ -1,4 +1,4 @@
-## G2PSim
+## Replay Package
 
 Replay scripts for Jefferson Lab experiment E08-027 (g2p).
 
