@@ -9,5 +9,6 @@ rootfiles
 jobfiles
 logfiles
 
+pyg2psim
 hallbfield.map
 rms.png
