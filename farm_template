@@ -24,7 +24,9 @@ cp -pr $BEAM_PATH/pyDB .
 cp -pr $OPTICS_PATH/g2prec .
 cp -pr $OPTICS_PATH/pyg2psim .
 cp -pr $OPTICS_PATH/*.so .
+cp -pr $OPTICS_PATH/*.so.* .
 cp -pr $OPTICS_PATH/hallbfield.map .
+cp -pr $OPTICS_PATH/libanalyzer .
 
 cp -pr $REPLAY_PATH/*.C .
 cp -pr $REPLAY_PATH/*.so .
