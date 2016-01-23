@@ -11,11 +11,11 @@
 # NOTICE: everything need to be modified is here !!!
 
 # database path
-G2P_DIR=/w/halla-scifs2/g2p
-DB_DIR=${G2P_DIR}/centos62/replay/DB
+G2P_DIR=/work/halla/g2p/disk1
+DB_DIR=${G2P_DIR}/centos65/replay/DB
 
 # raw data path
-REPLAY_RAW_PATH=/cache/mss/halla/g2p/raw
+REPLAY_RAW_PATH=raw
 
 # output dir path
 REPLAY_OUT_PATH=/volatile/halla/g2p/chao/rootfiles
@@ -32,23 +32,23 @@ REPLAY_USE_OPTICS=1
 # paths
 ########################################################################
 # epics path
-EPICS_PATH=${G2P_DIR}/centos62/epics
+EPICS_PATH=${G2P_DIR}/centos65/epics
 
 # beam info path
-BEAM_PATH=${G2P_DIR}/centos62/bpm
+BEAM_PATH=${G2P_DIR}/centos65/bpm
 BEAM_PKL_PATH=/volatile/halla/g2p/pkls/bpmdatas
 
 # heliciy path
-HEL_PATH=${G2P_DIR}/centos62/helicity
+HEL_PATH=${G2P_DIR}/centos65/helicity
 
 # optics path
-OPTICS_PATH=${G2P_DIR}/centos62/g2psim
+OPTICS_PATH=${G2P_DIR}/centos65/g2psim
 ########################################################################
 
 ########################################################################
 # main
 ########################################################################
-# source $G2P_DIR/centos62/env.sh
+# source $G2P_DIR/centos65/env.sh
 # assume the env.sh file has already been sourced
 
 # some help function
@@ -194,7 +194,7 @@ function replay_farm() {
 
   echo -e '#!/bin/bash' >> replay.$1
   echo >> replay.$1
-  echo -e "source /w/halla-scifs2/g2p/centos62/env.sh" >> replay.$1
+  echo -e "source /work/halla/g2p/disk1/centos65/env.sh" >> replay.$1
   echo >> replay.$1
   echo -e ": > $1.log" >> replay.$1
   echo -e "exec 6>&1 7>&2 &>$1.log" >> replay.$1
