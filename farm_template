@@ -9,11 +9,7 @@ cp -pr $EPICS_PATH/gen_epics .
 cp -pr $EPICS_PATH/result/s_$RUN.dat .
 cp -pr $EPICS_PATH/list.cfg .
 
-cp -pr $HEL_PATH/decode .
-cp -pr $HEL_PATH/ring .
-cp -pr $HEL_PATH/tir .
-cp -pr $HEL_PATH/align .
-cp -pr $HEL_PATH/gen_hel .
+cp -pr $HEL_PATH/hel_* .
 cp -pr $HEL_PATH/*.cfg .
 cp -pr $HEL_PATH/helicity.sh .
 

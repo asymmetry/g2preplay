@@ -155,11 +155,13 @@ function replay_normal() {
   # add helicity info
   if [[ "$REPLAY_USE_HELICITY" -eq 1 ]]; then
     mkdir tmp
-    $HEL_PATH/decode -e $EVENT_AMOUNT -c $HEL_PATH/$HEL_CFGFILE -r $REPLAY_RAW_PATH -o tmp $1 
-    $HEL_PATH/ring -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
-    $HEL_PATH/tir -r -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
-    $HEL_PATH/align -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
-    $HEL_PATH/gen_hel -c $HEL_PATH/$HEL_CFGFILE -i tmp -r $REPLAY_OUT_PATH $1
+    $HEL_PATH/hel_decode -e $EVENT_AMOUNT -c $HEL_PATH/$HEL_CFGFILE -r $REPLAY_RAW_PATH -o tmp $1 
+    $HEL_PATH/hel_ring -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/hel_happex -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/hel_tir -r -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/hel_alignr -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/hel_alignh -c $HEL_PATH/$HEL_CFGFILE -i tmp -o tmp $1
+    $HEL_PATH/hel_insert -c $HEL_PATH/$HEL_CFGFILE -i tmp -r $REPLAY_OUT_PATH $1
     rm -rf tmp
   fi
 
