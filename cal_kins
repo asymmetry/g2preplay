@@ -12,19 +12,19 @@
 
 # database path
 G2P_DIR=/work/halla/g2p/disk1
-DB_DIR=${G2P_DIR}/centos65/replay/DB
+DB_DIR=${G2P_DIR}/centos72/replay/DB
 
 # rootfile path
 ROOTFILE_PATH=rootfiles
 
 # optics path
-OPTICS_PATH=${G2P_DIR}/centos65/g2psim
+OPTICS_PATH=${G2P_DIR}/centos72/g2psim
 ########################################################################
 
 ########################################################################
 # main
 ########################################################################
-# source $G2P_DIR/centos65/env.sh
+# source $G2P_DIR/centos72/env.sh
 # assume the env.sh file has already been sourced
 
 # some help function
@@ -74,7 +74,7 @@ function calkins_farm() {
 
   echo -e '#!/bin/bash' >> cal.$1
   echo >> cal.$1
-  echo -e "source /work/halla/g2p/disk1/centos65/env.sh" >> cal.$1
+  echo -e "source /work/halla/g2p/disk1/centos72/env.sh" >> cal.$1
   echo >> cal.$1
   echo -e ": > $1.log" >> cal.$1
   echo -e "exec 6>&1 7>&2 &>$1.log" >> cal.$1
@@ -99,7 +99,7 @@ function calkins_farm() {
   echo -e "TRACK: analysis" >> job.$1
   echo -e "DISK_SPACE:  32 GB" >> job.$1
   echo -e "MEMORY: 2000 MB" >> job.$1
-  echo -e "OS: centos65" >> job.$1
+  echo -e "OS: centos72" >> job.$1
   echo -e "COMMAND: cal.$1" >> job.$1
   echo -e "OTHER_FILES: " >> job.$1
   echo -e "$PWD/jobfiles/cal.$1" >> job.$1

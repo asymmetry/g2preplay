@@ -12,7 +12,7 @@
 
 # database path
 G2P_DIR=/work/halla/g2p/disk1
-DB_DIR=${G2P_DIR}/centos65/replay/DB
+DB_DIR=${G2P_DIR}/centos72/replay/DB
 
 # raw data path
 REPLAY_RAW_PATH=raw
@@ -32,23 +32,23 @@ REPLAY_USE_OPTICS=1
 # paths
 ########################################################################
 # epics path
-EPICS_PATH=${G2P_DIR}/centos65/epics
+EPICS_PATH=${G2P_DIR}/centos72/epics
 
 # beam info path
-BEAM_PATH=${G2P_DIR}/centos65/bpm
+BEAM_PATH=${G2P_DIR}/centos72/bpm
 BEAM_PKL_PATH=/volatile/halla/g2p/pkls/bpmdatas
 
 # heliciy path
-HEL_PATH=${G2P_DIR}/centos65/helicity
+HEL_PATH=${G2P_DIR}/centos72/helicity
 
 # optics path
-OPTICS_PATH=${G2P_DIR}/centos65/g2psim
+OPTICS_PATH=${G2P_DIR}/centos72/g2psim
 ########################################################################
 
 ########################################################################
 # main
 ########################################################################
-# source $G2P_DIR/centos65/env.sh
+# source $G2P_DIR/centos72/env.sh
 # assume the env.sh file has already been sourced
 
 # some help function
@@ -196,7 +196,7 @@ function replay_farm() {
 
   echo -e '#!/bin/bash' >> replay.$1
   echo >> replay.$1
-  echo -e "source /work/halla/g2p/disk1/centos65/env.sh" >> replay.$1
+  echo -e "source /work/halla/g2p/disk1/centos72/env.sh" >> replay.$1
   echo >> replay.$1
   echo -e ": > $1.log" >> replay.$1
   echo -e "exec 6>&1 7>&2 &>$1.log" >> replay.$1
@@ -239,10 +239,11 @@ function replay_farm() {
 
   echo -e "PROJECT: g2p" >> job.$1
   echo -e "JOBNAME: replay.$1" >> job.$1
-  echo -e "TRACK: reconstruction" >> job.$1
+  #echo -e "TRACK: reconstruction" >> job.$1
+  echo -e "TRACK: test" >> job.$1
   echo -e "DISK_SPACE:  32 GB" >> job.$1
   echo -e "MEMORY: 2000 MB" >> job.$1
-  echo -e "OS: centos65" >> job.$1
+  echo -e "OS: centos72" >> job.$1
   echo -e "COMMAND: replay.$1" >> job.$1
   echo -e "OTHER_FILES: " >> job.$1
   echo -e "$PWD/jobfiles/replay.$1" >> job.$1
