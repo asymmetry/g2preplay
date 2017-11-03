@@ -41,15 +41,9 @@ void replay_R(Int_t runnumber=0,Int_t defAll=0,Int_t defEvt=-1,Int_t fstEvt=0,Bo
   //  Module switches
   //==================================
   Bool_t bHelicity=kFALSE; // This part goes to Chao's code
-  Bool_t bBeam=kFALSE;
-  Bool_t bScaler=kFALSE;
+  Bool_t bBeam=kTRUE;
+  Bool_t bScaler=kTRUE;
   Bool_t bPhysics=kTRUE; // Always calculate gold tracks
-
-  TString ts;
-  ts=gSystem->Getenv("REPLAY_USE_BEAM");
-  if(ts.Atoi()==1)bBeam=kTRUE;
-  ts=gSystem->Getenv("REPLAY_USE_SCALER");
-  if(ts.Atoi()==1)bScaler=kTRUE;
 
   //==================================
   //  R-HRS Detectors

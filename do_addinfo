@@ -14,16 +14,13 @@
 G2P_DIR=/work/halla/g2p/disk1
 DB_DIR=${G2P_DIR}/centos72/replay/DB
 
-# raw data path
-REPLAY_RAW_PATH=raw
-
 # output dir path
 REPLAY_OUT_PATH=rootfiles
 
 # settings
-REPLAY_USE_EPICSINFO=1
-REPLAY_USE_HELICITY=1
-REPLAY_USE_BEAM=1
+REPLAY_USE_EPICSINFO=0
+REPLAY_USE_HELICITY=0
+REPLAY_USE_BEAM=0
 REPLAY_USE_OPTICS=1
 ########################################################################
 
@@ -52,34 +49,31 @@ OPTICS_PATH=${G2P_DIR}/centos72/g2psim
 
 # some help function
 function echo_usage() {
-  echo -e "usage: do_replay [-e|--event=EVENT_AMOUNT] [-f|--farm] [-h|--help]"
-  echo -e "                 [-l|--list=RUN_LIST] RUN_NUMBERS"
-  echo -e "See 'do_replay --help' for more information. "
+  echo -e "usage: do_addinfo [-f|--farm] [-h|--help]"
+  echo -e "                  [-l|--list=RUN_LIST] RUN_NUMBERS"
+  echo -e "See 'do_addinfo --help' for more information. "
 }
 
 function echo_help() {
-  echo -e "usage: do_replay [options] RUN_NUMBERS"
-  echo -e "  -e, --event=EVENT_AMOUNT   Set event limit" 
+  echo -e "usage: do_addinfo [options] RUN_NUMBERS"
   echo -e "  -f, --farm                 Use batch farm to replay"
   echo -e "  -h, --help                 This small usage guide"
   echo -e "  -l, --list=RUN_LIST        Set run number list to replay"
 }
 
 # analysis the command line parameters and save them
-ARGS=$(getopt -o e:fhl: -l help,event:,farm,list: \
-              -n "do_replay" -- "$@")
+ARGS=$(getopt -o fhl: -l help,farm,list: \
+              -n "do_addinfo" -- "$@")
 ORI_ARGS="$@"
 eval set -- "$ARGS"
 
 # program defaults
-EVENT_AMOUNT=-1
 USE_FARM=0
 RUN_LIST=""
 
 # read command line parameters
 while true; do
-  case "$1" in       
-    -e|--evt)         EVENT_AMOUNT="$2"; shift 2;;
+  case "$1" in
     -f|--farm)        USE_FARM=1; shift;;
     -h|--help)        echo_help; exit 0;;
     -l|--list)        RUN_LIST="$2"; shift 2;;
@@ -88,28 +82,11 @@ while true; do
   esac
 done
 
-# defaults settings
-REPLAY_USE_ANALYZER=1
-
-if [[ $REPLAY_USE_OPTICS -eq 1 ]]; then
-  REPLAY_USE_BEAM=1
-fi
-
-if [[ $REPLAY_USE_BEAM -eq 1 ]]; then
-  REPLAY_USE_EPICSINFO=1
-fi
-
-if [[ $REPLAY_USE_HELICITY -eq 1 ]]; then
-  REPLAY_USE_EPICSINFO=1
-fi
-
-if [[ $REPLAY_USE_SCALER -eq 1 ]]; then
-  REPLAY_USE_EPICSINFO=1
-fi
+EVENT_AMOUNT=-1
+REPLAY_USE_ANALYZER=0
 
 # export settings
 export DB_DIR
-export REPLAY_RAW_PATH
 export REPLAY_OUT_PATH
 export BEAMPACPATH=${BEAM_PATH}
 export BEAMPKLBAK=${BEAM_PKL_PATH}
@@ -129,19 +106,6 @@ function replay_normal() {
   else
     ARM="L"
     HEL_CFGFILE="LHRS.cfg"
-  fi
-
-  # clean work directory
-  if [[ -e $REPLAY_OUT_PATH/g2p_$1.root ]];then
-    rm -rf $REPLAY_OUT_PATH/g2p_$1*.root
-    rm -rf $REPLAY_OUT_PATH/g2p_$1*.root_bak
-    rm -rf $REPLAY_OUT_PATH/pkl
-  fi
-
-  # replay with analyzer
-  if [[ "$REPLAY_USE_ANALYZER" -eq 1 ]]; then
-    analyzer -b -q "replay_$ARM.C($1,0,$EVENT_AMOUNT,0,1)"
-    analyzer -b -q "Purge.C($1)"
   fi
 
   # add epics info
@@ -222,11 +186,6 @@ function replay_farm() {
   echo >> replay.$1
   echo -e 'exec 1>&6 2>&7 6>&- 7>&-' >> replay.$1
   echo >> replay.$1
-  echo -e "sed '/Did not init slot/'d $1.log > temp1.dat" >> replay.$1
-  echo -e "sed '/crateslot loadData for slot/'d temp1.dat > temp2.dat" >> replay.$1
-  echo -e "sed '/Fix your cratemap/'d temp2.dat > temp3.dat" >> replay.$1
-  echo -e "sed '/hits on TDC channel/'d temp3.dat > temp4.dat" >> replay.$1
-  echo -e "mv temp4.dat $1.log" >> replay.$1
   echo -e "cp $1.log $PWD/logfiles" >> replay.$1
   echo -e "rm -rf *.bak.root" >> replay.$1
   echo -e "cp *.root $REPLAY_OUT_PATH" >> replay.$1
@@ -240,13 +199,13 @@ function replay_farm() {
   echo -e "TRACK: reconstruction" >> job.$1
   echo -e "OS: centos7" >> job.$1
   echo -e "DISK_SPACE:  32 GB" >> job.$1
-  echo -e "MEMORY: 2000 MB" >> job.$1
+  echo -e "MEMORY: 3000 MB" >> job.$1
   echo -e "COMMAND: replay.$1" >> job.$1
   echo -e "OTHER_FILES: " >> job.$1
   echo -e "$PWD/jobfiles/replay.$1" >> job.$1
   echo -e "SINGLE_JOB: true" >> job.$1
   echo -e "INPUT_FILES: " >> job.$1
-  for file in $(ls -1 /mss/halla/g2p/raw/g2p_$1.dat.?)
+  for file in $(ls -1 $REPLAY_OUT_PATH/g2p_$1*.root)
   do
     echo "$file" >> job.$1
   done

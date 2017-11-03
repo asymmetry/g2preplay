@@ -33,10 +33,12 @@ echo
 ls -al
 echo
 
-analyzer -b -q "replay_$ARM.C($RUN,0,$EVENT_AMOUNT,0,1)"
+if [[ "REPLAY_USE_ANALYZER" -eq 1 ]]; then
+  analyzer -b -q "replay_$ARM.C($RUN,0,$EVENT_AMOUNT,0,1)"
+  analyzer -b -q "Purge.C($RUN)"
+fi
 
 if [[ "REPLAY_USE_EPICSINFO" -eq 1 ]]; then
-  analyzer -b -q "Purge.C($RUN)"
   ./gen_epics $RUN
 fi
 
